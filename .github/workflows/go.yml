@@ -61,6 +61,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
+          UPLOAD_URL="${UPLOAD_URL%\{?name,label\}}" # 去除占位符
+          echo "UPLOAD_URL is: $UPLOAD_URL"  # 打印去除占位符后的 URL
           for file in ./build/*; do
             name=$(basename "$file")
             echo "Uploading $name..."
@@ -68,6 +71,6 @@ jobs:
               -H "Authorization: token $GITHUB_TOKEN" \
               -H "Content-Type: application/octet-stream" \
               --data-binary @"$file" \
-              "${{ steps.create_release.outputs.upload_url }}?name=$name"
+              "$UPLOAD_URL?name=$name"
           done
         shell: bash
