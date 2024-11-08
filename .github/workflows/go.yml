@@ -64,6 +64,10 @@ jobs:
           for file in ./build/*; do
             name=$(basename "$file")
             echo "Uploading $name..."
-            gh release upload "${{ github.ref_name }}" "$file" --clobber
+            curl -sSL -XPOST \
+              -H "Authorization: token $GITHUB_TOKEN" \
+              -H "Content-Type: application/octet-stream" \
+              --data-binary @"$file" \
+              "${{ steps.create_release.outputs.upload_url }}?name=$name"
           done
         shell: bash
