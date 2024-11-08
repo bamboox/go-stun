@@ -62,8 +62,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          UPLOAD_URL="${UPLOAD_URL%\{?name,label\}}" # 去除占位符
-          echo "UPLOAD_URL is: $UPLOAD_URL"  # 打印去除占位符后的 URL
+          UPLOAD_URL="${UPLOAD_URL%\{?name,label\}}"
+          echo "UPLOAD_URL is: $UPLOAD_URL" 
           for file in ./build/*; do
             name=$(basename "$file")
             echo "Uploading $name..."
