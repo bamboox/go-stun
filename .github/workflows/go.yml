@@ -54,6 +54,7 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
+          overwrite: true
 
       - name: Upload Release Assets
         env:
