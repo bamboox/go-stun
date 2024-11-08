@@ -56,18 +56,14 @@ jobs:
           prerelease: false
           overwrite: true
 
+
       - name: Upload Release Assets
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          UPLOAD_URL="${{ steps.create_release.outputs.upload_url }}"
-          UPLOAD_URL="${UPLOAD_URL%\{?name,label\}}" # 去除占位符
           for file in ./build/*; do
             name=$(basename "$file")
             echo "Uploading $name..."
-            curl -sSL -XPOST \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Content-Type: application/octet-stream" \
-              --data-binary @"$file" \
-              "$UPLOAD_URL?name=$name"
+            gh release upload "${{ github.ref_name }}" "$file" --clobber
           done
+        shell: bash
